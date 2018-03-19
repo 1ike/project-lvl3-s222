@@ -1,7 +1,5 @@
-// @flow
+import './sass/main.scss';
 
-export class Example {
-  init() {
-    console.log('ehu!');
-  }
-}
+
+// console.log("$('point')");
+
