@@ -1,14 +1,12 @@
-// import webpack from 'webpack';
+import webpack from 'webpack';
 import path from 'path';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-// import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import CleanWebpackPlugin from 'clean-webpack-plugin';
-import webpack from 'webpack';
 import autoprefixer from 'autoprefixer';
 
 export default () => ({
-  entry: './src/index.js',
+  entry: ['./src/js/index.js', './src/sass/main.scss'],
   output: {
     filename: 'js/webpack-package.js',
   },
@@ -17,7 +15,6 @@ export default () => ({
     rules: [
       {
         test: /\.js$/,
-        exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
           options: {
@@ -45,6 +42,9 @@ export default () => ({
           MiniCssExtractPlugin.loader,
           {
             loader: 'css-loader', // translates CSS into CommonJS modules
+            options: {
+              sourceMap: true,
+            },
           }, {
             loader: 'postcss-loader', // Run post css actions
             options: {
@@ -53,9 +53,13 @@ export default () => ({
                   browsers: ['> 1%', 'last 2 versions'],
                 }),
               ],
+              sourceMap: true,
             },
           }, {
             loader: 'sass-loader',
+            options: {
+              sourceMap: true,
+            },
           }],
       },
     ],

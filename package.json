@@ -22,12 +22,12 @@
   "homepage": "https://github.com/1ike/project-lvl3-s222#readme",
   "dependencies": {
     "autoprefixer": "^8.1.0",
+    "axios": "^0.18.0",
     "babel-loader": "^7.1.4",
     "babel-plugin-syntax-dynamic-import": "*",
     "bootstrap": "^4.0.0",
     "clean-webpack-plugin": "^0.1.19",
     "css-loader": "^0.28.11",
-    "extract-text-webpack-plugin": "^3.0.2",
     "html-webpack-plugin": "^3.0.6",
     "jquery": "^3.3.1",
     "mini-css-extract-plugin": "^0.2.0",
@@ -35,7 +35,7 @@
     "popper.js": "^1.14.1",
     "postcss-loader": "^2.1.2",
     "sass-loader": "^6.0.7",
-    "style-loader": "^0.20.3",
+    "validator": "^9.4.1",
     "webpack": "^4.1.1",
     "webpack-cli": "*",
     "webpack-merge": "*"
@@ -43,7 +43,6 @@
   "devDependencies": {
     "babel-eslint": "*",
     "babel-preset-env": "*",
-    "babel-preset-flow": "*",
     "babel-preset-stage-0": "*",
     "debug": "^3",
     "eslint": "*",

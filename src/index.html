@@ -8,14 +8,15 @@
 
 </head>
 <body>
-  <div class="container">
+  <div id="mainContainer" class="container">
     <div class="jumbotron mt-3">
       <h1 class="display-4"><%= htmlWebpackPlugin.options.title %></h1>
-      <form>
+      <form id="urlForm">
         <div class="form-group">
-          <label for="exampleInputEmail1">Enter something</label>
-          <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+          <label for="exampleInputEmail1">Enter RSS feed url</label>
+          <input type="url" class="form-control" id="urlInput" aria-describedby="urlHelp" placeholder="Enter url" required>
         </div>
+        <div class="alert alert-danger d-none" role="alert"></div>
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
     </div>

@@ -1,13 +1,13 @@
 @import '~bootstrap/scss/bootstrap.scss';
 
-h1 {
-    margin-bottom: 45px;
+
+input.form-control.invalidInput {
+    box-shadow: 0 0 0 0.2rem rgba(255, 0, 0, 0.7);
 }
 
-h3 {
-    text-shadow: 1px 1px 2px black, 0 0 1em green;
-}
-
-#point {
-    color:red;
+.feed {
+    &:nth-of-type(2) {
+        margin-top: 2rem;
+    }
+    margin-bottom: 2rem;
 }
