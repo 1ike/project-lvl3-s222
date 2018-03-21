@@ -1,10 +1,6 @@
 import form from './form';
 
 form({
-  formSelector: '#urlForm',
-  inputSelector: '#urlInput',
+  formID: 'urlForm',
+  inputID: 'urlInput',
 });
-
-
-// console.log("$('point')");
-

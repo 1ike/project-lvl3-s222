@@ -1,16 +1,15 @@
-<!DOCTYPE html>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title><%= htmlWebpackPlugin.options.title %></title>
+  <title>RSS Reader</title>
 
-</head>
+<link href="css/main.css" rel="stylesheet"></head>
 <body>
   <div id="mainContainer" class="container">
     <div class="jumbotron mt-3">
-      <h1 class="display-4"><%= htmlWebpackPlugin.options.title %></h1>
+      <h1 class="display-4">RSS Reader</h1>
       <form id="urlForm">
         <div class="form-group">
           <label for="exampleInputEmail1">Enter RSS feed url</label>
@@ -21,5 +20,5 @@
       </form>
     </div>
   </div>
+  <script type="text/javascript" src="js/webpack-package.js"></script>
 </body>
-</html>

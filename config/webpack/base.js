@@ -1,4 +1,4 @@
-import webpack from 'webpack';
+// import webpack from 'webpack';
 import path from 'path';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
@@ -67,12 +67,6 @@ export default () => ({
   plugins: [
     new CleanWebpackPlugin(['dist'], {
       root: path.resolve('.'),
-    }),
-    new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery',
-      'window.jQuery': 'jquery',
-      Popper: ['popper.js', 'default'],
     }),
     new MiniCssExtractPlugin({
       // Options similar to the same options in webpackOptions.output

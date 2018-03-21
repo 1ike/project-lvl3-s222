@@ -1,28 +1,40 @@
 import validator from 'validator';
 import download from './download';
 
-const check = ($input) => {
-  if (validator.isURL($input.val())) {
-    $input[0].classList.remove('invalidInput');
+const check = (input) => {
+  if (!input.value || validator.isURL(input.value.trim())) {
+    input.classList.remove('invalidInput');
   } else {
-    $input[0].classList.add('invalidInput');
+    input.classList.add('invalidInput');
   }
 };
 
 export default (data) => {
-  const $form = $(data.formSelector);
-  const $input = $(data.inputSelector);
+  const form = document.getElementById(data.formID);
+  const input = document.getElementById(data.inputID);
 
-  check($input);
+  input.focus();
 
-  $input.keyup((e) => {
+  input.addEventListener('change', (e) => {
     e.preventDefault();
-    check($input);
+    check(input);
+  });
+  input.addEventListener('input', (e) => {
+    e.preventDefault();
+    check(input);
+  });
+  input.addEventListener('keyup', (e) => {
+    e.preventDefault();
+    check(input);
+  });
+  input.addEventListener('focus', (e) => {
+    e.preventDefault();
+    check(input);
   });
 
-  $form.submit((e) => {
+  form.addEventListener('submit', (e) => {
     e.preventDefault();
-    download($input.val());
+    download(input.value);
   });
 };
 

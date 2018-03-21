@@ -49,6 +49,9 @@
     "eslint-config-airbnb": "*",
     "eslint-plugin-import": "^2.9.0",
     "jest": "^22",
-    "jest-cli": "^22"
+    "jest-cli": "^22",
+    "js-beautify": "^1.7.5",
+    "nock": "^9.2.3",
+    "timeout-then": "^1.1.0"
   }
 }

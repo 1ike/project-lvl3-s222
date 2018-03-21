@@ -1,5 +1,3 @@
-// import axios from 'axios';
-
 
 // const corsProxy = '';// 'https://crossorigin.me/';
 
@@ -11,18 +9,18 @@
 export default (result) => {
   const { data, error } = result;
 
-  const $alert = $('.alert.alert-danger');
+  const alert = document.querySelector('.alert.alert-danger');
   if (error) {
-    $alert.html(error.message);
-    $alert.removeClass('d-none');
+    alert.innerHTML = error.message;
+    alert.classList.remove('d-none');
     return null;
   }
 
-  $alert.addClass('d-none');
+  alert.classList.add('d-none');
 
   const parser = new DOMParser();
   const xmlDOM = parser.parseFromString(data, 'application/xml');
-  console.log(xmlDOM);
+  // console.log(xmlDOM);
 
   const feed = document.createElement('div');
   feed.classList.add('feed');
@@ -33,9 +31,8 @@ export default (result) => {
   description.innerHTML = xmlDOM.querySelector('channel > description').textContent;
 
   const items = document.createElement('ul');
-  console.log(items);
+  // console.log(items);
   [].forEach.call(xmlDOM.querySelectorAll('item'), (item) => {
-    console.log("item.querySelector('title').textContent");
     const li = document.createElement('li');
     const a = document.createElement('a');
     a.innerHTML = item.querySelector('title').textContent;
@@ -51,5 +48,11 @@ export default (result) => {
   const container = document.getElementById('mainContainer');
   const firstItem = container.querySelector('.feed');
   container.insertBefore(feed, firstItem);
+
+  const input = document.getElementById('urlInput');
+  input.focus();
+  input.value = '';
+
+  return null;
 };
 
