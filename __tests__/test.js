@@ -45,26 +45,24 @@ test('feed', async () => {
   expect(html(document.documentElement.innerHTML)).toEqual(html(expected));
 });
 
-/* test('modal', async () => {
+test('modal', async () => {
   const xmlYear = fs.readFileSync(path.join(fixuturesPath, 'year.xml'), 'utf8');
-  const modal = fs.readFileSync(path.join(fixuturesPath, 'modal.html'), 'utf8');
-  const modalClose = fs.readFileSync(path.join(fixuturesPath, 'modal-close.html'), 'utf8');
+
 
   nock(host).get(feedYear).reply(200, xmlYear);
   download(host + feedYear, false);
   await timeout(100);
 
   const button = document.querySelector('a[href="http://example.com/test/1514764800"] ~ button');
-  console.log(button);
   button.click();
-  await timeout(1000);
+  await timeout(1700);
+  const modal = document.getElementById('descriptionModal');
 
-  expect(html(document.documentElement.innerHTML)).toEqual(html(modal));
+  expect(modal.classList.contains('show')).toBeTruthy();
 
-  const buttonClose = document.querySelector('#descriptionModal button');
+  const buttonClose = modal.querySelector('button');
   buttonClose.click();
-  await timeout(1000);
+  await timeout(700);
 
-
-  expect(html(document.documentElement.innerHTML)).toEqual(html(modalClose));
-}); */
+  expect(modal.classList.contains('show')).toBeFalsy();
+});
