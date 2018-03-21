@@ -1,11 +1,14 @@
 import validator from 'validator';
 import download from './download';
+import store from './store';
 
 const check = (input) => {
   if (!input.value || validator.isURL(input.value.trim())) {
     input.classList.remove('invalidInput');
+    store.form.isValid = true;
   } else {
     input.classList.add('invalidInput');
+    store.form.isValid = false;
   }
 };
 

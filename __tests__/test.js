@@ -24,7 +24,7 @@ const feedMinute = '/feed';
 const feedYear = '/feed?unit=year';
 
 
-beforeAll(() => {
+beforeEach(() => {
   const initHtml = fs.readFileSync(path.join(fixuturesPath, 'init.html'), 'utf8');
   document.documentElement.innerHTML = initHtml;
 });
@@ -44,3 +44,27 @@ test('feed', async () => {
 
   expect(html(document.documentElement.innerHTML)).toEqual(html(expected));
 });
+
+/* test('modal', async () => {
+  const xmlYear = fs.readFileSync(path.join(fixuturesPath, 'year.xml'), 'utf8');
+  const modal = fs.readFileSync(path.join(fixuturesPath, 'modal.html'), 'utf8');
+  const modalClose = fs.readFileSync(path.join(fixuturesPath, 'modal-close.html'), 'utf8');
+
+  nock(host).get(feedYear).reply(200, xmlYear);
+  download(host + feedYear, false);
+  await timeout(100);
+
+  const button = document.querySelector('a[href="http://example.com/test/1514764800"] ~ button');
+  console.log(button);
+  button.click();
+  await timeout(1000);
+
+  expect(html(document.documentElement.innerHTML)).toEqual(html(modal));
+
+  const buttonClose = document.querySelector('#descriptionModal button');
+  buttonClose.click();
+  await timeout(1000);
+
+
+  expect(html(document.documentElement.innerHTML)).toEqual(html(modalClose));
+}); */

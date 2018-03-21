@@ -1,0 +1,40 @@
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    <title>RSS Reader</title>
+  
+  <link href="css/main.css" rel="stylesheet"></head>
+  <body style="" class="">
+    <div id="mainContainer" class="container">
+      <div class="jumbotron mt-3">
+        <h1 class="display-4">RSS Reader</h1>
+        <form id="urlForm">
+          <div class="form-group">
+            <label for="exampleInputEmail1">Enter RSS feed url</label>
+            <input class="form-control" id="urlInput" aria-describedby="urlHelp" placeholder="Enter url" required="" type="url">
+          </div>
+          <div class="alert alert-danger d-none" role="alert"></div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      </div>
+    <div class="feed" id="feed_1"><h2>Lorem ipsum feed for an interval of 1 years</h2><p>This is a constantly updating lorem ipsum feed</p><ul><li class="mt-1"><a href="http://example.com/test/1514764800">Lorem ipsum 2018-01-01T00:00:00+00:00</a><button class="btn btn-outline-primary btn-sm ml-2" type="button" data-toggle="modal" data-target="#descriptionModal">Description</button></li><li class="mt-1"><a href="http://example.com/test/1483228800">Lorem ipsum 2017-01-01T00:00:00+00:00</a><button class="btn btn-outline-primary btn-sm ml-2" type="button" data-toggle="modal" data-target="#descriptionModal">Description</button></li><li class="mt-1"><a href="http://example.com/test/1451606400">Lorem ipsum 2016-01-01T00:00:00+00:00</a><button class="btn btn-outline-primary btn-sm ml-2" type="button" data-toggle="modal" data-target="#descriptionModal">Description</button></li><li class="mt-1"><a href="http://example.com/test/1420070400">Lorem ipsum 2015-01-01T00:00:00+00:00</a><button class="btn btn-outline-primary btn-sm ml-2" type="button" data-toggle="modal" data-target="#descriptionModal">Description</button></li><li class="mt-1"><a href="http://example.com/test/1388534400">Lorem ipsum 2014-01-01T00:00:00+00:00</a><button class="btn btn-outline-primary btn-sm ml-2" type="button" data-toggle="modal" data-target="#descriptionModal">Description</button></li><li class="mt-1"><a href="http://example.com/test/1356998400">Lorem ipsum 2013-01-01T00:00:00+00:00</a><button class="btn btn-outline-primary btn-sm ml-2" type="button" data-toggle="modal" data-target="#descriptionModal">Description</button></li><li class="mt-1"><a href="http://example.com/test/1325376000">Lorem ipsum 2012-01-01T00:00:00+00:00</a><button class="btn btn-outline-primary btn-sm ml-2" type="button" data-toggle="modal" data-target="#descriptionModal">Description</button></li><li class="mt-1"><a href="http://example.com/test/1293840000">Lorem ipsum 2011-01-01T00:00:00+00:00</a><button class="btn btn-outline-primary btn-sm ml-2" type="button" data-toggle="modal" data-target="#descriptionModal">Description</button></li><li class="mt-1"><a href="http://example.com/test/1262304000">Lorem ipsum 2010-01-01T00:00:00+00:00</a><button class="btn btn-outline-primary btn-sm ml-2" type="button" data-toggle="modal" data-target="#descriptionModal">Description</button></li><li class="mt-1"><a href="http://example.com/test/1230768000">Lorem ipsum 2009-01-01T00:00:00+00:00</a><button class="btn btn-outline-primary btn-sm ml-2" type="button" data-toggle="modal" data-target="#descriptionModal">Description</button></li></ul></div></div>
+    <div class="modal fade" id="descriptionModal" tabindex="-1" role="dialog" aria-labelledby="descriptionModalLabel" style="display: none;" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="descriptionModalLabel"></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  <script type="text/javascript" src="js/webpack-package.js"></script>
+  </body>
