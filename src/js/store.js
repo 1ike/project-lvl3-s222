@@ -1,12 +1,16 @@
 export default {
+  formID: 'urlForm',
+  inputID: 'urlInput',
+  modalID: 'descriptionModal',
   feeds: [],
-  form: {
-    isValid: false,
+  input: {
+    isValid: true,
     value: '',
   },
-  alert: {
-    active: false,
-    value: '',
+  error: null,
+  modal: {
+    title: '',
+    body: '',
   },
 };
 

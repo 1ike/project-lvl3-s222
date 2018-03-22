@@ -17,23 +17,6 @@ export default () => ({
         test: /\.js$/,
         use: {
           loader: 'babel-loader',
-          options: {
-            cacheDirectory: true,
-            presets: [
-              ['env', {
-                modules: false,
-                targets: {
-                  browsers: '> 0%',
-                  uglify: true,
-                },
-                useBuiltIns: true,
-              }],
-            ],
-
-            plugins: [
-              'syntax-dynamic-import',
-            ],
-          },
         },
       },
       {

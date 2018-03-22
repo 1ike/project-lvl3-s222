@@ -9,6 +9,7 @@ import nock from 'nock'; // eslint-disable-line
 
 import download from '../src/js/download';
 
+
 axios.defaults.adapter = httpAdapter;
 
 /* const getElems = () => {
@@ -29,7 +30,7 @@ beforeEach(() => {
   document.documentElement.innerHTML = initHtml;
 });
 
-test('feed', async () => {
+/* test('feed', async () => {
   const expected = fs.readFileSync(path.join(fixuturesPath, 'result.html'), 'utf8');
   const xmlMinute = fs.readFileSync(path.join(fixuturesPath, 'minute.xml'), 'utf8');
   const xmlYear = fs.readFileSync(path.join(fixuturesPath, 'year.xml'), 'utf8');
@@ -43,17 +44,20 @@ test('feed', async () => {
   await timeout(100);
 
   expect(html(document.documentElement.innerHTML)).toEqual(html(expected));
-});
+}); */
 
 test('modal', async () => {
   const xmlYear = fs.readFileSync(path.join(fixuturesPath, 'year.xml'), 'utf8');
 
 
-  nock(host).get(feedYear).reply(200, xmlYear);
-  download(host + feedYear, false);
+  // nock(host).get(feedYear).reply(200, xmlYear);
+  // window.download(host + feedYear, false);
+  // await timeout(100);
+  const input = document.getElementById('urlInput');
+  input.value = 'hhh';
   await timeout(100);
-
-  const button = document.querySelector('a[href="http://example.com/test/1514764800"] ~ button');
+  console.log(input.outerHTML);
+/*   const button = document.querySelector('a[href="http://example.com/test/1514764800"] ~ button');
   button.click();
   await timeout(1700);
   const modal = document.getElementById('descriptionModal');
@@ -64,5 +68,5 @@ test('modal', async () => {
   buttonClose.click();
   await timeout(700);
 
-  expect(modal.classList.contains('show')).toBeFalsy();
+  expect(modal.classList.contains('show')).toBeFalsy(); */
 });
