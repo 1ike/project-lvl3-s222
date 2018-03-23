@@ -3,20 +3,20 @@ import validator from 'validator';
 import download from './download';
 import store from './store';
 import publishers from './publishers';
-import renders from './renders';
+import components from './components';
 
 
 const {
-  inputValuePublisher, alertPublisher, addFeedPublisher, modalPublisher,
+  inputPublisher, alertPublisher, feedPublisher, modalPublisher,
 } = publishers;
 const {
-  renderInput, renderAlert, renderFeed, renderModal,
-} = renders;
+  inputComponent, alertComponent, feedComponent, modalComponent,
+} = components;
 
-inputValuePublisher.subscribe(renderInput);
-alertPublisher.subscribe(renderAlert);
-addFeedPublisher.subscribe(renderFeed).subscribe(renderInput);
-modalPublisher.subscribe(renderModal);
+inputPublisher.subscribe(inputComponent);
+alertPublisher.subscribe(alertComponent);
+feedPublisher.subscribe(feedComponent);
+modalPublisher.subscribe(modalComponent);
 
 
 const form = document.getElementById(store.formID);
@@ -25,7 +25,7 @@ const $modal = $(`#${store.modalID}`);
 
 
 $modal.on('hidden.bs.modal', () => {
-  modalPublisher.deliver({ title: '', body: '' });
+  modalPublisher.deliver('MODAL_CLOSE');
 });
 
 
@@ -38,7 +38,7 @@ const getInputState = () => {
 };
 
 const inputOnChange = () => {
-  inputValuePublisher.deliver(getInputState());
+  inputPublisher.deliver('INPUT_CHANGE', getInputState());
 };
 
 
@@ -48,19 +48,12 @@ inputOnChange();
 
 
 input.addEventListener('change', (e) => {
-  e.preventDefault();
   inputOnChange();
 });
 input.addEventListener('input', (e) => {
-  e.preventDefault();
   inputOnChange();
 });
 input.addEventListener('keyup', (e) => {
-  e.preventDefault();
-  inputOnChange();
-});
-input.addEventListener('focus', (e) => {
-  e.preventDefault();
   inputOnChange();
 });
 

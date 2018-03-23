@@ -1,35 +1,43 @@
 import $ from 'jquery';
 import 'bootstrap';
-import store from './store';
 import publishers from './publishers';
+import store from './store';
 
-const { modalPublisher, inputValuePublisher } = publishers;
+const { modalPublisher, inputPublisher } = publishers;
 
-const $modal = $(`#${store.modalID}`);
 
-const renderModal = () => {
-  $modal.find('.modal-title').text(store.modal.title);
-  $modal.find('.modal-body').text(store.modal.body);
+const getDataModal = () => {
+  const { modal, modalID } = store;
+  return { modal, modalID };
+};
+const renderModal = ({ modal, modalID }) => {
+  const $modal = $(`#${modalID}`);
+  $modal.find('.modal-title').text(modal.title);
+  $modal.find('.modal-body').text(modal.body);
 };
 
 
-const renderInput = () => {
-  const input = document.getElementById(store.inputID);
-  if (store.input.isValid) {
+const getDataInput = () => {
+  const { input, inputID } = store;
+  return { inputData: input, inputID };
+};
+const renderInput = ({ inputData, inputID }) => {
+  const input = document.getElementById(inputID);
+  if (inputData.isValid) {
     input.classList.remove('invalidInput');
   } else {
     input.classList.add('invalidInput');
   }
-  input.value = store.input.value;
+  input.value = inputData.value;
   input.focus();
 };
 
-const renderAlert = () => {
+const getDataAlert = () => store.error;
+const renderAlert = (error) => {
   const alert = document.querySelector('.alert.alert-danger');
-  const { error } = store;
 
   if (error) {
-    alert.innerHTML = store.error.message;
+    alert.innerHTML = error.message;
     alert.classList.remove('d-none');
   } else {
     alert.classList.add('d-none');
@@ -38,8 +46,14 @@ const renderAlert = () => {
 };
 
 
-const renderFeed = () => {
-  const feed = store.feeds[store.feeds.length - 1];
+const getDataFeed = () => {
+  const { modalID } = store;
+  return {
+    feed: store.feeds[store.feeds.length - 1],
+    modalID,
+  };
+};
+const renderFeed = ({ feed, modalID }) => {
   const feedElem = document.createElement('div');
   feedElem.classList.add('feed');
   feedElem.id = feed.id;
@@ -65,9 +79,12 @@ const renderFeed = () => {
       button.classList.add('btn', 'btn-outline-primary', 'btn-sm', 'ml-2');
       button.type = 'button';
       button.dataset.toggle = 'modal';
-      button.dataset.target = `#${store.modalID}`;
+      button.dataset.target = `#${modalID}`;
       button.addEventListener('click', () => {
-        modalPublisher.deliver({ title: item.title, body: item.description });
+        modalPublisher.deliver('MODAL_OPEN', {
+          title: item.title,
+          body: item.description,
+        });
       });
       li.appendChild(button);
     }
@@ -83,13 +100,13 @@ const renderFeed = () => {
   const firstItem = container.querySelector('.feed');
   container.insertBefore(feedElem, firstItem);
 
-  inputValuePublisher.deliver({ isValid: true, value: '' });
+  inputPublisher.deliver('INPUT_EMPTY');
 };
 
 
 export default {
-  renderInput,
-  renderAlert,
-  renderFeed,
-  renderModal,
+  inputComponent: { render: renderInput, getData: getDataInput },
+  alertComponent: { render: renderAlert, getData: getDataAlert },
+  feedComponent: { render: renderFeed, getData: getDataFeed },
+  modalComponent: { render: renderModal, getData: getDataModal },
 };

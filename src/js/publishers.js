@@ -36,29 +36,55 @@ const getFeedData = (xmlDOM) => {
 };
 
 
-const inputValueStorekeeper = (data) => {
+const inputStorekeeper = (data) => {
   store.input = data;
 };
 
-const alertStorekeeper = (data) => {
+const inputEmptyStorekeeper = () => {
+  store.input = {
+    isValid: true,
+    value: '',
+  };
+};
+
+const alertOpenStorekeeper = (data) => {
   store.error = data;
 };
 
+const alertCloseStorekeeper = () => {
+  store.error = null;
+};
+
 const addFeedStorekeeper = (data) => {
-  console.log(data);
   const parser = new DOMParser();
   const xmlDOM = parser.parseFromString(data, 'application/xml');
   const feed = getFeedData(xmlDOM);
   store.feeds = [...store.feeds, feed];
 };
 
-const modalStorekeeper = (data) => {
+const modalOpenStorekeeper = (data) => {
   store.modal = data;
 };
 
+const modalCloseStorekeeper = () => {
+  store.modal = {
+    title: '',
+    body: '',
+  };
+};
+
 export default {
-  inputValuePublisher: new Publisher(inputValueStorekeeper),
-  alertPublisher: new Publisher(alertStorekeeper),
-  addFeedPublisher: new Publisher(addFeedStorekeeper),
-  modalPublisher: new Publisher(modalStorekeeper),
+  inputPublisher: new Publisher({
+    INPUT_CHANGE: inputStorekeeper,
+    INPUT_EMPTY: inputEmptyStorekeeper,
+  }),
+  alertPublisher: new Publisher({
+    ALERT_OPEN: alertOpenStorekeeper,
+    ALERT_CLOSE: alertCloseStorekeeper,
+  }),
+  feedPublisher: new Publisher({ ADD_FEED: addFeedStorekeeper }),
+  modalPublisher: new Publisher({
+    MODAL_OPEN: modalOpenStorekeeper,
+    MODAL_CLOSE: modalCloseStorekeeper,
+  }),
 };

@@ -4,7 +4,7 @@ import publishers from './publishers';
 
 const corsProxy = 'https://crossorigin.me/';
 
-const { alertPublisher, addFeedPublisher } = publishers;
+const { alertPublisher, feedPublisher } = publishers;
 
 
 export default (url, crossorigin = true) => {
@@ -12,10 +12,10 @@ export default (url, crossorigin = true) => {
     .then(
       (response) => {
         const { data } = response;
-        alertPublisher.deliver(null);
-        addFeedPublisher.deliver(data);
+        alertPublisher.deliver('ALERT_CLOSE');
+        feedPublisher.deliver('ADD_FEED', data);
       },
-      error => alertPublisher.deliver(error),
+      error => alertPublisher.deliver('ALERT_OPEN', error),
     )
     .catch((error) => {
       console.log(error);

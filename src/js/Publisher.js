@@ -1,14 +1,15 @@
 export default class {
   subscribers = [];
 
-  constructor(storekeeper) {
-    this.storekeeper = storekeeper;
+  constructor(storekeepers) {
+    this.storekeepers = storekeepers;
   }
 
-  deliver(data) {
-    if (this.storekeeper) this.storekeeper(data);
-    this.subscribers.forEach((fn) => {
-      fn();
+  deliver(type, data) {
+    this.storekeepers[type](data);
+    this.subscribers.forEach((component) => {
+      const dataFromStore = component.getData();
+      component.render(dataFromStore);
     });
 
     return this;
