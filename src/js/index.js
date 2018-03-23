@@ -7,31 +7,29 @@ import renders from './renders';
 
 
 const {
-  inputIsValidPublisher, inputValuePublisher, alertPublisher, addFeedPublisher, modalPublisher,
+  inputValuePublisher, alertPublisher, addFeedPublisher, modalPublisher,
 } = publishers;
 const {
   renderInput, renderAlert, renderFeed, renderModal,
 } = renders;
+
+inputValuePublisher.subscribe(renderInput);
+alertPublisher.subscribe(renderAlert);
+addFeedPublisher.subscribe(renderFeed).subscribe(renderInput);
+modalPublisher.subscribe(renderModal);
+
 
 const form = document.getElementById(store.formID);
 const input = document.getElementById(store.inputID);
 const $modal = $(`#${store.modalID}`);
 
 
-inputIsValidPublisher.subscribe(renderInput);
-inputValuePublisher.subscribe(renderInput);
-alertPublisher.subscribe(renderAlert);
-addFeedPublisher.subscribe(renderFeed).subscribe(renderInput);
-modalPublisher.subscribe(renderModal);
-
 $modal.on('hidden.bs.modal', () => {
-  store.modal.title = '';
-  store.modal.body = '';
-  modalPublisher.deliver();
+  modalPublisher.deliver({ title: '', body: '' });
 });
 
 
-const checkInput = () => {
+const getInputState = () => {
   const value = input.value.trim();
   return {
     isValid: !input.value || validator.isURL(value),
@@ -39,13 +37,8 @@ const checkInput = () => {
   };
 };
 
-const setInputState = () => {
-  store.input = checkInput();
-};
-
 const inputOnChange = () => {
-  setInputState();
-  inputIsValidPublisher.deliver();
+  inputValuePublisher.deliver(getInputState());
 };
 
 
@@ -70,6 +63,7 @@ input.addEventListener('focus', (e) => {
   e.preventDefault();
   inputOnChange();
 });
+
 
 form.addEventListener('submit', (e) => {
   e.preventDefault();

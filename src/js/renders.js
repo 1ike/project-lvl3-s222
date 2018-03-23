@@ -38,7 +38,8 @@ const renderAlert = () => {
 };
 
 
-const renderFeed = (feed) => {
+const renderFeed = () => {
+  const feed = store.feeds[store.feeds.length - 1];
   const feedElem = document.createElement('div');
   feedElem.classList.add('feed');
   feedElem.id = feed.id;
@@ -53,23 +54,25 @@ const renderFeed = (feed) => {
   feed.articles.forEach((item) => {
     const li = document.createElement('li');
     const a = document.createElement('a');
-    const button = document.createElement('button');
     li.classList.add('mt-1');
     a.innerHTML = item.title;
     a.href = item.link;
-    button.innerHTML = 'Description';
-    button.classList.add('btn', 'btn-outline-primary', 'btn-sm', 'ml-2');
-    button.type = 'button';
-    button.dataset.toggle = 'modal';
-    button.dataset.target = `#${store.modalID}`;
     li.appendChild(a);
-    li.appendChild(button);
+
+    if (item.description) {
+      const button = document.createElement('button');
+      button.innerHTML = 'Description';
+      button.classList.add('btn', 'btn-outline-primary', 'btn-sm', 'ml-2');
+      button.type = 'button';
+      button.dataset.toggle = 'modal';
+      button.dataset.target = `#${store.modalID}`;
+      button.addEventListener('click', () => {
+        modalPublisher.deliver({ title: item.title, body: item.description });
+      });
+      li.appendChild(button);
+    }
+
     items.appendChild(li);
-    button.addEventListener('click', () => {
-      store.modal.title = item.title;
-      store.modal.body = item.description;
-      modalPublisher.deliver();
-    });
   });
 
   feedElem.appendChild(title);
@@ -80,8 +83,7 @@ const renderFeed = (feed) => {
   const firstItem = container.querySelector('.feed');
   container.insertBefore(feedElem, firstItem);
 
-  store.input = { isValid: true, value: '' };
-  inputValuePublisher.deliver();
+  inputValuePublisher.deliver({ isValid: true, value: '' });
 };
 
 
