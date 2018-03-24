@@ -6,6 +6,7 @@ export default class {
   }
 
   deliver(type, data) {
+    // console.log(type);
     this.storekeepers[type](data);
     this.subscribers.forEach((component) => {
       const dataFromStore = component.getData();

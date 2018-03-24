@@ -1,21 +1,28 @@
 import $ from 'jquery';
 import validator from 'validator';
-import download from './download';
 import store from './store';
 import publishers from './publishers';
 import components from './components';
 
 
 const {
-  inputPublisher, alertPublisher, feedPublisher, modalPublisher,
+  inputPublisher,
+  alertPublisher,
+  feedPublisher,
+  modalPublisher,
+  virtualPublisher,
 } = publishers;
 const {
-  inputComponent, alertComponent, feedComponent, modalComponent,
+  inputComponent,
+  alertComponent,
+  feedComponent,
+  updateFeedsComponent,
+  modalComponent,
 } = components;
 
 inputPublisher.subscribe(inputComponent);
 alertPublisher.subscribe(alertComponent);
-feedPublisher.subscribe(feedComponent);
+feedPublisher.subscribe(feedComponent).subscribe(updateFeedsComponent);
 modalPublisher.subscribe(modalComponent);
 
 
@@ -47,18 +54,24 @@ input.focus();
 inputOnChange();
 
 
-input.addEventListener('change', (e) => {
+input.addEventListener('change', () => {
   inputOnChange();
 });
-input.addEventListener('input', (e) => {
+input.addEventListener('input', () => {
   inputOnChange();
 });
-input.addEventListener('keyup', (e) => {
+input.addEventListener('keyup', () => {
   inputOnChange();
 });
 
 
 form.addEventListener('submit', (e) => {
   e.preventDefault();
-  if (store.input.isValid) download(store.input.value);
+  virtualPublisher.deliver('DOWNLOAD_FEED');
 });
+
+
+const update = () => {
+  virtualPublisher.deliver('UPDATE_FEEDS');
+};
+setInterval(update, 5000);

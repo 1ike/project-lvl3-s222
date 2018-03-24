@@ -10,7 +10,6 @@ export default () => ({
   output: {
     filename: 'js/webpack-package.js',
   },
-  devtool: 'source-map',
   module: {
     rules: [
       {
@@ -48,9 +47,9 @@ export default () => ({
     ],
   },
   plugins: [
-    new CleanWebpackPlugin(['dist'], {
+    /*     new CleanWebpackPlugin(['dist'], {
       root: path.resolve('.'),
-    }),
+    }), */
     new MiniCssExtractPlugin({
       // Options similar to the same options in webpackOptions.output
       // both options are optional

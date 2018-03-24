@@ -3,7 +3,7 @@ import 'bootstrap';
 import publishers from './publishers';
 import store from './store';
 
-const { modalPublisher, inputPublisher } = publishers;
+const { feedPublisher, modalPublisher, inputPublisher } = publishers;
 
 
 const getDataModal = () => {
@@ -46,6 +46,40 @@ const renderAlert = (error) => {
 };
 
 
+const getItemElem = (item, modalID) => {
+  const li = document.createElement('li');
+  const a = document.createElement('a');
+  li.classList.add('mt-1');
+  a.innerHTML = item.title;
+  a.href = item.link;
+  li.appendChild(a);
+
+  if (item.description) {
+    const button = document.createElement('button');
+    button.innerHTML = 'Description';
+    button.classList.add('btn', 'btn-outline-primary', 'btn-sm', 'ml-2');
+    button.type = 'button';
+    button.dataset.toggle = 'modal';
+    button.dataset.target = `#${modalID}`;
+    button.addEventListener('click', () => {
+      modalPublisher.deliver('MODAL_OPEN', {
+        title: item.title,
+        body: item.description,
+      });
+    });
+    li.appendChild(button);
+  }
+  return li;
+};
+
+const updateArticles = (feed, modalID) => {
+  const itemsList = document.querySelector(`#${feed.id} ul`);
+  feed.updatedArticles.forEach((item) => {
+    const li = getItemElem(item, modalID);
+    itemsList.insertBefore(li, itemsList.firstChild);
+  });
+};
+
 const getDataFeed = () => {
   const { modalID } = store;
   return {
@@ -54,9 +88,20 @@ const getDataFeed = () => {
   };
 };
 const renderFeed = ({ feed, modalID }) => {
+  const { id, updatedArticles } = feed;
+  if (updatedArticles) {
+    if (updatedArticles.length) {
+      console.log('updatedArticles', updatedArticles);
+      updateArticles(feed, modalID);
+      feedPublisher.deliver('FEEDS_UPDATED');
+      return;
+    }
+    return;
+  }
+
   const feedElem = document.createElement('div');
   feedElem.classList.add('feed');
-  feedElem.id = feed.id;
+  feedElem.id = id;
 
   const title = document.createElement('h2');
   title.innerHTML = feed.title;
@@ -66,29 +111,7 @@ const renderFeed = ({ feed, modalID }) => {
   const items = document.createElement('ul');
 
   feed.articles.forEach((item) => {
-    const li = document.createElement('li');
-    const a = document.createElement('a');
-    li.classList.add('mt-1');
-    a.innerHTML = item.title;
-    a.href = item.link;
-    li.appendChild(a);
-
-    if (item.description) {
-      const button = document.createElement('button');
-      button.innerHTML = 'Description';
-      button.classList.add('btn', 'btn-outline-primary', 'btn-sm', 'ml-2');
-      button.type = 'button';
-      button.dataset.toggle = 'modal';
-      button.dataset.target = `#${modalID}`;
-      button.addEventListener('click', () => {
-        modalPublisher.deliver('MODAL_OPEN', {
-          title: item.title,
-          body: item.description,
-        });
-      });
-      li.appendChild(button);
-    }
-
+    const li = getItemElem(item, modalID);
     items.appendChild(li);
   });
 
@@ -103,10 +126,31 @@ const renderFeed = ({ feed, modalID }) => {
   inputPublisher.deliver('INPUT_EMPTY');
 };
 
+const getDataUpdateFeeds = () => {
+  const { modalID, feeds } = store;
+  const updatedFeeds = feeds.filter((feed) => {
+    const { updatedArticles } = feed;
+    return updatedArticles && updatedArticles.length;
+  });
+  return {
+    updatedFeeds,
+    modalID,
+  };
+};
+const renderUpdateFeeds = ({ updatedFeeds, modalID }) => {
+  if (!updatedFeeds.length) return;
+
+  updatedFeeds.forEach((feed) => {
+    updateArticles(feed, modalID);
+  });
+  feedPublisher.deliver('FEEDS_UPDATED');
+};
+
 
 export default {
   inputComponent: { render: renderInput, getData: getDataInput },
   alertComponent: { render: renderAlert, getData: getDataAlert },
   feedComponent: { render: renderFeed, getData: getDataFeed },
+  updateFeedsComponent: { render: renderUpdateFeeds, getData: getDataUpdateFeeds },
   modalComponent: { render: renderModal, getData: getDataModal },
 };
