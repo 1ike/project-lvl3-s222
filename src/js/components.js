@@ -1,9 +1,14 @@
 import $ from 'jquery';
 import 'bootstrap';
+import axios from 'axios';
+
 import publishers from './publishers';
 import store from './store';
 
-const { feedPublisher, modalPublisher, inputPublisher } = publishers;
+
+const {
+  feedPublisher, modalPublisher, inputPublisher, alertPublisher,
+} = publishers;
 
 
 const getDataModal = () => {
@@ -91,7 +96,6 @@ const renderFeed = ({ feed, modalID }) => {
   const { id, updatedArticles } = feed;
   if (updatedArticles) {
     if (updatedArticles.length) {
-      console.log('updatedArticles', updatedArticles);
       updateArticles(feed, modalID);
       feedPublisher.deliver('FEEDS_UPDATED');
       return;
@@ -126,6 +130,7 @@ const renderFeed = ({ feed, modalID }) => {
   inputPublisher.deliver('INPUT_EMPTY');
 };
 
+
 const getDataUpdateFeeds = () => {
   const { modalID, feeds } = store;
   const updatedFeeds = feeds.filter((feed) => {
@@ -147,10 +152,36 @@ const renderUpdateFeeds = ({ updatedFeeds, modalID }) => {
 };
 
 
+const getDataURL = () => {
+  const { urls } = store;
+  return {
+    urls,
+    corsProxy: 'https://crossorigin.me/',
+    crossorigin: true,
+  };
+};
+const renderDownload = ({ urls, corsProxy, crossorigin }) => {
+  urls.forEach((url) => {
+    axios.get(crossorigin ? corsProxy + url : url)
+      .then(
+        (response) => {
+          const { data } = response;
+          alertPublisher.deliver('ALERT_CLOSE');
+          feedPublisher.deliver('ADD_FEED', { data, url });
+        },
+        error => alertPublisher.deliver('ALERT_OPEN', error),
+      )
+      .catch((error) => {
+        console.log(error); // eslint-disable-line
+      });
+  });
+};
+
 export default {
   inputComponent: { render: renderInput, getData: getDataInput },
   alertComponent: { render: renderAlert, getData: getDataAlert },
   feedComponent: { render: renderFeed, getData: getDataFeed },
   updateFeedsComponent: { render: renderUpdateFeeds, getData: getDataUpdateFeeds },
   modalComponent: { render: renderModal, getData: getDataModal },
+  downloadComponent: { render: renderDownload, getData: getDataURL },
 };

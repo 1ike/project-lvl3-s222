@@ -10,7 +10,7 @@ const {
   alertPublisher,
   feedPublisher,
   modalPublisher,
-  virtualPublisher,
+  urlsPublisher,
 } = publishers;
 const {
   inputComponent,
@@ -18,12 +18,14 @@ const {
   feedComponent,
   updateFeedsComponent,
   modalComponent,
+  downloadComponent,
 } = components;
 
 inputPublisher.subscribe(inputComponent);
 alertPublisher.subscribe(alertComponent);
 feedPublisher.subscribe(feedComponent).subscribe(updateFeedsComponent);
 modalPublisher.subscribe(modalComponent);
+urlsPublisher.subscribe(downloadComponent);
 
 
 const form = document.getElementById(store.formID);
@@ -67,11 +69,11 @@ input.addEventListener('keyup', () => {
 
 form.addEventListener('submit', (e) => {
   e.preventDefault();
-  virtualPublisher.deliver('DOWNLOAD_FEED');
+  urlsPublisher.deliver('DOWNLOAD_FEED');
 });
 
 
 const update = () => {
-  virtualPublisher.deliver('UPDATE_FEEDS');
+  urlsPublisher.deliver('UPDATE_FEEDS');
 };
 setInterval(update, 5000);

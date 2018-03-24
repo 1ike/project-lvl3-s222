@@ -1,4 +1,3 @@
-import axios from 'axios';
 import _ from 'lodash';
 
 import Publisher from './Publisher';
@@ -87,12 +86,8 @@ const addFeedStorekeeper = ({ data, url }) => {
   const feed = _.find(feeds, { url });
 
   if (feed) {
-    console.log('feed.articles', feed.articles);
-    console.log('parsedData.articles', parsedData.articles);
     const diff = _.differenceBy(parsedData.articles, feed.articles, 'link');
     const filteredFeeds = feeds.filter(f => f.id !== feed.id);
-    console.log('diff', diff);
-    console.log('filteredFeeds', filteredFeeds);
     store.feeds = [...filteredFeeds, {
       ...feed,
       ...parsedData,
@@ -105,7 +100,6 @@ const addFeedStorekeeper = ({ data, url }) => {
       url,
     }];
   }
-  console.log('store.feeds', store.feeds);
 };
 
 const feedsUpdatedStorekeeper = () => {
@@ -124,46 +118,21 @@ const feedPublisher = new Publisher({
 
 
 /**
- *   virtualPublisher
+ *   urlsPublisher
  */
-const corsProxy = 'https://crossorigin.me/';
-
-const download = (url, crossorigin = true) => {
-  axios.get(crossorigin ? corsProxy + url : url)
-    .then(
-      (response) => {
-        const { data } = response;
-        alertPublisher.deliver('ALERT_CLOSE');
-        feedPublisher.deliver('ADD_FEED', { data, url });
-      },
-      error => alertPublisher.deliver('ALERT_OPEN', error),
-    )
-    .catch((error) => {
-      console.log(error);
-    });
-};
-
 const downloadFeedStorekeeper = () => {
-  if (store.input.isValid) download(store.input.value);
-  // download(store.input.value, false);
+  store.urls = [store.input.value];
 };
 
 const updatedFeedsStorekeeper = () => {
-  store.feeds.forEach(feed => download(feed.url));
+  const urls = store.feeds.map(feed => feed.url);
+  store.urls = urls;
 };
 
-const virtualPublisher = new Publisher({
+const urlsPublisher = new Publisher({
   DOWNLOAD_FEED: downloadFeedStorekeeper,
   UPDATE_FEEDS: updatedFeedsStorekeeper,
 });
-
-
-/**
- *   updatedFeedsPublisher
- */
-
-
-const updatedFeedsPublisher = new Publisher({ UPDATE_FEEDS: updatedFeedsStorekeeper });
 
 
 /**
@@ -190,7 +159,6 @@ export default {
   inputPublisher,
   alertPublisher,
   feedPublisher,
-  updatedFeedsPublisher,
   modalPublisher,
-  virtualPublisher,
+  urlsPublisher,
 };
