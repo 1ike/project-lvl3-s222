@@ -146,7 +146,7 @@ const getDataURL = () => {
   return {
     urls,
     corsProxy: 'https://crossorigin.me/',
-    crossorigin: false,
+    crossorigin: true,
   };
 };
 const renderDownload = ({ urls, corsProxy, crossorigin }) => {
