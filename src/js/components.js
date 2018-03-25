@@ -156,8 +156,8 @@ const renderModal = ({ modal, modalID }) => {
 
 
 export default {
-  inputComponent: { render: renderInput, getData: getDataInput },
-  alertComponent: { render: renderAlert, getData: getDataAlert },
-  feedComponent: { render: renderFeed, getData: getDataFeed },
-  modalComponent: { render: renderModal, getData: getDataModal },
+  inputComponent: { handler: renderInput, getData: getDataInput },
+  alertComponent: { handler: renderAlert, getData: getDataAlert },
+  feedComponent: { handler: renderFeed, getData: getDataFeed },
+  modalComponent: { handler: renderModal, getData: getDataModal },
 };

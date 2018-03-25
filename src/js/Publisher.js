@@ -10,7 +10,7 @@ export default class {
     this.storekeepers[type](data);
     this.subscribers.forEach((component) => {
       const dataFromStore = component.getData();
-      component.render(dataFromStore);
+      component.handler(dataFromStore);
     });
 
     return this;

@@ -59,12 +59,13 @@ const download = (urlInput) => {
       console.log(responses);
       alertPublisher.deliver('ALERT_CLOSE');
       feedPublisher.deliver('UPDATE_FEEDS', { responses, corsProxy });
-
-      setTimeout(download, 5000);
     })
     .catch((error) => {
       alertPublisher.deliver('ALERT_OPEN', error);
-        console.log(error); // eslint-disable-line
+      console.log(error); // eslint-disable-line
+    })
+    .then(() => {
+      setTimeout(download, 5000);
     });
 };
 
