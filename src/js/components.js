@@ -99,45 +99,45 @@ const getDataFeed = () => {
   };
 };
 const renderFeed = ({ updatedFeeds, modalID }) => {
-  if (updatedFeeds.length) {
-    updatedFeeds.forEach((feed) => {
-      const { id, updatedArticles } = feed;
-      if (updatedArticles) {
-        if (updatedArticles.length) {
-          updateArticles(feed, modalID);
-          return;
-        }
+  if (updatedFeeds.length === 0) return;
 
+  updatedFeeds.forEach((feed) => {
+    const { id, updatedArticles } = feed;
+    if (updatedArticles) {
+      if (updatedArticles.length) {
+        updateArticles(feed, modalID);
         return;
       }
 
-      const feedElem = document.createElement('div');
-      feedElem.classList.add('feed');
-      feedElem.id = id;
+      return;
+    }
 
-      const title = document.createElement('h2');
-      title.innerHTML = feed.title;
-      const description = document.createElement('p');
-      description.innerHTML = feed.description;
+    const feedElem = document.createElement('div');
+    feedElem.classList.add('feed');
+    feedElem.id = id;
 
-      const items = document.createElement('ul');
+    const title = document.createElement('h2');
+    title.innerHTML = feed.title;
+    const description = document.createElement('p');
+    description.innerHTML = feed.description;
 
-      feed.articles.forEach((item) => {
-        const li = getItemElem(item, modalID);
-        items.appendChild(li);
-      });
+    const items = document.createElement('ul');
 
-      feedElem.appendChild(title);
-      feedElem.appendChild(description);
-      feedElem.appendChild(items);
-
-      const container = document.getElementById('mainContainer');
-      const firstItem = container.querySelector('.feed');
-      container.insertBefore(feedElem, firstItem);
+    feed.articles.forEach((item) => {
+      const li = getItemElem(item, modalID);
+      items.appendChild(li);
     });
-    feedPublisher.deliver('FEEDS_UPDATED');
-    inputPublisher.deliver('INPUT_EMPTY');
-  }
+
+    feedElem.appendChild(title);
+    feedElem.appendChild(description);
+    feedElem.appendChild(items);
+
+    const container = document.getElementById('mainContainer');
+    const firstItem = container.querySelector('.feed');
+    container.insertBefore(feedElem, firstItem);
+  });
+  feedPublisher.deliver('FEEDS_UPDATED');
+  inputPublisher.deliver('INPUT_EMPTY');
 };
 
 
