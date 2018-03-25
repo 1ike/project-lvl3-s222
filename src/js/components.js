@@ -1,6 +1,5 @@
 import $ from 'jquery';
 import 'bootstrap';
-import axios from 'axios';
 
 import publishers from './publishers';
 import store from './store';
@@ -10,8 +9,6 @@ const {
   feedPublisher,
   modalPublisher,
   inputPublisher,
-  alertPublisher,
-  urlsPublisher,
 } = publishers;
 
 
@@ -145,40 +142,6 @@ const renderFeed = ({ updatedFeeds, modalID }) => {
 
 
 /**
- *   downloadComponent
- */
-const getDataURL = () => {
-  const { urls } = store;
-  return {
-    urls,
-    corsProxy: 'https://crossorigin.me/',
-    crossorigin: true,
-  };
-};
-const renderDownload = ({ urls, corsProxy, crossorigin }) => {
-  const downloadPromises = urls.map(url => axios.get(crossorigin ? corsProxy + url : url)
-    .then(
-      (response) => {
-        const { data } = response;
-        alertPublisher.deliver('ALERT_CLOSE');
-        feedPublisher.deliver('ADD_FEED', { data, url });
-      },
-      error => alertPublisher.deliver('ALERT_OPEN', error),
-    )
-    .catch((error) => {
-        console.log(error); // eslint-disable-line
-    }));
-  Promise.all(downloadPromises)
-    .then(() => {
-      const update = () => {
-        urlsPublisher.deliver('UPDATE_FEEDS');
-      };
-      setTimeout(update, 5000);
-    });
-};
-
-
-/**
  *   modalComponent
  */
 const getDataModal = () => {
@@ -196,6 +159,5 @@ export default {
   inputComponent: { render: renderInput, getData: getDataInput },
   alertComponent: { render: renderAlert, getData: getDataAlert },
   feedComponent: { render: renderFeed, getData: getDataFeed },
-  downloadComponent: { render: renderDownload, getData: getDataURL },
   modalComponent: { render: renderModal, getData: getDataModal },
 };

@@ -77,29 +77,32 @@ const getFeedData = (xmlDOM) => {
   };
 };
 
-const addFeedStorekeeper = ({ data, url }) => {
-  const parser = new DOMParser();
-  const xmlDOM = parser.parseFromString(data, 'application/xml');
-  const parsedData = getFeedData(xmlDOM);
+const updateFeedsStorekeeper = (responses) => {
+  responses.forEach(({ data, request }) => {
+    const parser = new DOMParser();
+    const xmlDOM = parser.parseFromString(data, 'application/xml');
+    const parsedData = getFeedData(xmlDOM);
 
-  const { feeds } = store;
-  const feed = _.find(feeds, { url });
+    const url = request.responseURL;
+    const { feeds } = store;
+    const feed = _.find(feeds, { url });
 
-  if (feed) {
-    const diff = _.differenceBy(parsedData.articles, feed.articles, 'link');
-    const filteredFeeds = feeds.filter(f => f.id !== feed.id);
-    store.feeds = [...filteredFeeds, {
-      ...feed,
-      ...parsedData,
-      updatedArticles: diff,
-    }];
-  } else {
-    store.feeds = [...store.feeds, {
-      ...parsedData,
-      id: _.uniqueId('feed_'),
-      url,
-    }];
-  }
+    if (feed) {
+      const diff = _.differenceBy(parsedData.articles, feed.articles, 'link');
+      const filteredFeeds = feeds.filter(f => f.id !== feed.id);
+      store.feeds = [...filteredFeeds, {
+        ...feed,
+        ...parsedData,
+        updatedArticles: diff,
+      }];
+    } else {
+      store.feeds = [...store.feeds, {
+        ...parsedData,
+        id: _.uniqueId('feed_'),
+        url,
+      }];
+    }
+  });
 };
 
 const feedsUpdatedStorekeeper = () => {
@@ -112,7 +115,7 @@ const feedsUpdatedStorekeeper = () => {
 };
 
 const feedPublisher = new Publisher({
-  ADD_FEED: addFeedStorekeeper,
+  UPDATE_FEEDS: updateFeedsStorekeeper,
   FEEDS_UPDATED: feedsUpdatedStorekeeper,
 });
 
