@@ -11,6 +11,9 @@ const {
 } = publishers;
 
 
+/**
+ *   modalComponent
+ */
 const getDataModal = () => {
   const { modal, modalID } = store;
   return { modal, modalID };
@@ -22,6 +25,9 @@ const renderModal = ({ modal, modalID }) => {
 };
 
 
+/**
+ *   inputComponent
+ */
 const getDataInput = () => {
   const { input, inputID } = store;
   return { inputData: input, inputID };
@@ -37,6 +43,10 @@ const renderInput = ({ inputData, inputID }) => {
   input.focus();
 };
 
+
+/**
+ *   alertComponent
+ */
 const getDataAlert = () => store.error;
 const renderAlert = (error) => {
   const alert = document.querySelector('.alert.alert-danger');
@@ -51,6 +61,9 @@ const renderAlert = (error) => {
 };
 
 
+/**
+ *   feedComponent
+ */
 const getItemElem = (item, modalID) => {
   const li = document.createElement('li');
   const a = document.createElement('a');
@@ -141,6 +154,9 @@ const renderFeed = ({ updatedFeeds, modalID }) => {
 };
 
 
+/**
+ *   downloadComponent
+ */
 const getDataURL = () => {
   const { urls } = store;
   return {
@@ -165,6 +181,7 @@ const renderDownload = ({ urls, corsProxy, crossorigin }) => {
       });
   });
 };
+
 
 export default {
   inputComponent: { render: renderInput, getData: getDataInput },

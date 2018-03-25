@@ -74,5 +74,7 @@ form.addEventListener('submit', (e) => {
 
 const update = () => {
   urlsPublisher.deliver('UPDATE_FEEDS');
+  setTimeout(update, 5000);
 };
-setInterval(update, 5000);
+update();
+
