@@ -12,20 +12,6 @@ const {
 
 
 /**
- *   modalComponent
- */
-const getDataModal = () => {
-  const { modal, modalID } = store;
-  return { modal, modalID };
-};
-const renderModal = ({ modal, modalID }) => {
-  const $modal = $(`#${modalID}`);
-  $modal.find('.modal-title').text(modal.title);
-  $modal.find('.modal-body').text(modal.body);
-};
-
-
-/**
  *   inputComponent
  */
 const getDataInput = () => {
@@ -162,7 +148,7 @@ const getDataURL = () => {
   return {
     urls,
     corsProxy: 'https://crossorigin.me/',
-    crossorigin: true,
+    crossorigin: false,
   };
 };
 const renderDownload = ({ urls, corsProxy, crossorigin }) => {
@@ -183,10 +169,24 @@ const renderDownload = ({ urls, corsProxy, crossorigin }) => {
 };
 
 
+/**
+ *   modalComponent
+ */
+const getDataModal = () => {
+  const { modal, modalID } = store;
+  return { modal, modalID };
+};
+const renderModal = ({ modal, modalID }) => {
+  const $modal = $(`#${modalID}`);
+  $modal.find('.modal-title').text(modal.title);
+  $modal.find('.modal-body').text(modal.body);
+};
+
+
 export default {
   inputComponent: { render: renderInput, getData: getDataInput },
   alertComponent: { render: renderAlert, getData: getDataAlert },
   feedComponent: { render: renderFeed, getData: getDataFeed },
-  modalComponent: { render: renderModal, getData: getDataModal },
   downloadComponent: { render: renderDownload, getData: getDataURL },
+  modalComponent: { render: renderModal, getData: getDataModal },
 };
