@@ -47,7 +47,7 @@ const getInputState = () => {
 
 const download = (urlInput) => {
   const corsProxy = 'https://crossorigin.me/';
-  const crossorigin = false;
+  const crossorigin = true;
   const urls = urlInput ? [urlInput] : store.feeds.map(feed => feed.url);
 
   const downloadPromises = urls.map(url => axios.get(crossorigin ? corsProxy + url : url));
