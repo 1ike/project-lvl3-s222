@@ -7,7 +7,11 @@ import store from './store';
 
 
 const {
-  feedPublisher, modalPublisher, inputPublisher, alertPublisher,
+  feedPublisher,
+  modalPublisher,
+  inputPublisher,
+  alertPublisher,
+  urlsPublisher,
 } = publishers;
 
 
@@ -148,24 +152,29 @@ const getDataURL = () => {
   return {
     urls,
     corsProxy: 'https://crossorigin.me/',
-    crossorigin: false,
+    crossorigin: true,
   };
 };
 const renderDownload = ({ urls, corsProxy, crossorigin }) => {
-  urls.forEach((url) => {
-    axios.get(crossorigin ? corsProxy + url : url)
-      .then(
-        (response) => {
-          const { data } = response;
-          alertPublisher.deliver('ALERT_CLOSE');
-          feedPublisher.deliver('ADD_FEED', { data, url });
-        },
-        error => alertPublisher.deliver('ALERT_OPEN', error),
-      )
-      .catch((error) => {
+  const downloadPromises = urls.map(url => axios.get(crossorigin ? corsProxy + url : url)
+    .then(
+      (response) => {
+        const { data } = response;
+        alertPublisher.deliver('ALERT_CLOSE');
+        feedPublisher.deliver('ADD_FEED', { data, url });
+      },
+      error => alertPublisher.deliver('ALERT_OPEN', error),
+    )
+    .catch((error) => {
         console.log(error); // eslint-disable-line
-      });
-  });
+    }));
+  Promise.all(downloadPromises)
+    .then(() => {
+      const update = () => {
+        urlsPublisher.deliver('UPDATE_FEEDS');
+      };
+      setTimeout(update, 5000);
+    });
 };
 
 

@@ -71,10 +71,3 @@ form.addEventListener('submit', (e) => {
   urlsPublisher.deliver('DOWNLOAD_FEED');
 });
 
-
-const update = () => {
-  urlsPublisher.deliver('UPDATE_FEEDS');
-  setTimeout(update, 5000);
-};
-update();
-
