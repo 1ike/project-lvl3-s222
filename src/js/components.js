@@ -86,69 +86,58 @@ const updateArticles = (feed, modalID) => {
 };
 
 const getDataFeed = () => {
-  const { modalID } = store;
-  return {
-    feed: store.feeds[store.feeds.length - 1],
-    modalID,
-  };
-};
-const renderFeed = ({ feed, modalID }) => {
-  const { id, updatedArticles } = feed;
-  if (updatedArticles) {
-    if (updatedArticles.length) {
-      updateArticles(feed, modalID);
-      feedPublisher.deliver('FEEDS_UPDATED');
-      return;
-    }
-    return;
-  }
-
-  const feedElem = document.createElement('div');
-  feedElem.classList.add('feed');
-  feedElem.id = id;
-
-  const title = document.createElement('h2');
-  title.innerHTML = feed.title;
-  const description = document.createElement('p');
-  description.innerHTML = feed.description;
-
-  const items = document.createElement('ul');
-
-  feed.articles.forEach((item) => {
-    const li = getItemElem(item, modalID);
-    items.appendChild(li);
-  });
-
-  feedElem.appendChild(title);
-  feedElem.appendChild(description);
-  feedElem.appendChild(items);
-
-  const container = document.getElementById('mainContainer');
-  const firstItem = container.querySelector('.feed');
-  container.insertBefore(feedElem, firstItem);
-
-  inputPublisher.deliver('INPUT_EMPTY');
-};
-
-
-const getDataUpdateFeeds = () => {
-  const { modalID, feeds } = store;
+  const { feeds, modalID } = store;
   const updatedFeeds = feeds.filter((feed) => {
     const { updatedArticles } = feed;
-    return updatedArticles && updatedArticles.length;
+    const wasAdded = !updatedArticles;
+    const wasUpdated = updatedArticles && updatedArticles.length;
+    return wasAdded || wasUpdated;
   });
   return {
     updatedFeeds,
     modalID,
   };
 };
-const renderUpdateFeeds = ({ updatedFeeds, modalID }) => {
-  if (!updatedFeeds.length) return;
+const renderFeed = ({ updatedFeeds, modalID }) => {
+  if (updatedFeeds.length) {
+    updatedFeeds.forEach((feed) => {
+      const { id, updatedArticles } = feed;
+      if (updatedArticles) {
+        if (updatedArticles.length) {
+          updateArticles(feed, modalID);
+          return;
+        }
 
-  updatedFeeds.forEach((feed) => {
-    updateArticles(feed, modalID);
-  });
-  feedPublisher.deliver('FEEDS_UPDATED');
+        return;
+      }
+
+      const feedElem = document.createElement('div');
+      feedElem.classList.add('feed');
+      feedElem.id = id;
+
+      const title = document.createElement('h2');
+      title.innerHTML = feed.title;
+      const description = document.createElement('p');
+      description.innerHTML = feed.description;
+
+      const items = document.createElement('ul');
+
+      feed.articles.forEach((item) => {
+        const li = getItemElem(item, modalID);
+        items.appendChild(li);
+      });
+
+      feedElem.appendChild(title);
+      feedElem.appendChild(description);
+      feedElem.appendChild(items);
+
+      const container = document.getElementById('mainContainer');
+      const firstItem = container.querySelector('.feed');
+      container.insertBefore(feedElem, firstItem);
+    });
+    feedPublisher.deliver('FEEDS_UPDATED');
+    inputPublisher.deliver('INPUT_EMPTY');
+  }
 };
 
 
@@ -157,7 +146,7 @@ const getDataURL = () => {
   return {
     urls,
     corsProxy: 'https://crossorigin.me/',
-    crossorigin: true,
+    crossorigin: false,
   };
 };
 const renderDownload = ({ urls, corsProxy, crossorigin }) => {
@@ -181,7 +170,6 @@ export default {
   inputComponent: { render: renderInput, getData: getDataInput },
   alertComponent: { render: renderAlert, getData: getDataAlert },
   feedComponent: { render: renderFeed, getData: getDataFeed },
-  updateFeedsComponent: { render: renderUpdateFeeds, getData: getDataUpdateFeeds },
   modalComponent: { render: renderModal, getData: getDataModal },
   downloadComponent: { render: renderDownload, getData: getDataURL },
 };

@@ -16,14 +16,13 @@ const {
   inputComponent,
   alertComponent,
   feedComponent,
-  updateFeedsComponent,
   modalComponent,
   downloadComponent,
 } = components;
 
 inputPublisher.subscribe(inputComponent);
 alertPublisher.subscribe(alertComponent);
-feedPublisher.subscribe(feedComponent).subscribe(updateFeedsComponent);
+feedPublisher.subscribe(feedComponent);
 modalPublisher.subscribe(modalComponent);
 urlsPublisher.subscribe(downloadComponent);
 
