@@ -46,17 +46,19 @@ const getInputState = () => {
 
 
 const download = (urlInput) => {
-  const corsProxy = 'https://crossorigin.me/';
+  const proxyURL = 'https://crossorigin.me/';
   const crossorigin = true;
+  const corsProxy = { proxyURL, crossorigin };
   const urls = urlInput ? [urlInput] : store.feeds.map(feed => feed.url);
 
-  const downloadPromises = urls.map(url => axios.get(crossorigin ? corsProxy + url : url));
+  const downloadPromises = urls.map(url => axios.get(crossorigin ? proxyURL + url : url));
 
 
   Promise.all(downloadPromises)
     .then((responses) => {
+      console.log(responses);
       alertPublisher.deliver('ALERT_CLOSE');
-      feedPublisher.deliver('UPDATE_FEEDS', responses);
+      feedPublisher.deliver('UPDATE_FEEDS', { responses, corsProxy });
 
       setTimeout(download, 5000);
     })

@@ -77,13 +77,15 @@ const getFeedData = (xmlDOM) => {
   };
 };
 
-const updateFeedsStorekeeper = (responses) => {
+const updateFeedsStorekeeper = ({ responses, corsProxy }) => {
   responses.forEach(({ data, request }) => {
     const parser = new DOMParser();
     const xmlDOM = parser.parseFromString(data, 'application/xml');
     const parsedData = getFeedData(xmlDOM);
 
-    const url = request.responseURL;
+    const { proxyURL, crossorigin } = corsProxy;
+    const { responseURL } = request;
+    const url = crossorigin ? responseURL.replace(proxyURL, '') : responseURL;
     const { feeds } = store;
     const feed = _.find(feeds, { url });
 
