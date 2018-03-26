@@ -18,7 +18,7 @@ export default {
   },
   proxy: {
     proxyURL: 'https://crossorigin.me/',
-    crossorigin: false,
+    crossorigin: true,
   },
   regularUpdate: {
     delay: 5000,
