@@ -6,4 +6,4 @@ script: make lint test
 
 after_success:
   - make build
-  - surge --project ./dist --domain rss-reader.surge.sh
+  - surge --project ./dist --domain thin-activity.surge.sh
