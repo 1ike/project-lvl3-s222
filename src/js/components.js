@@ -1,14 +1,17 @@
 import $ from 'jquery';
 import 'bootstrap';
+import axios from 'axios';
 
 import publishers from './publishers';
 import store from './store';
 
 
 const {
+  inputPublisher,
+  urlsPublisher,
+  alertPublisher,
   feedPublisher,
   modalPublisher,
-  inputPublisher,
 } = publishers;
 
 
@@ -37,7 +40,6 @@ const renderInput = ({ inputData, inputID }) => {
 const getDataAlert = () => store.error;
 const renderAlert = (error) => {
   const alert = document.querySelector('.alert.alert-danger');
-
   if (error) {
     alert.innerHTML = error.message;
     alert.classList.remove('d-none');
@@ -155,9 +157,51 @@ const renderModal = ({ modal, modalID }) => {
 };
 
 
+/**
+ *   downloadComponent
+ */
+const getDataDownload = () => {
+  const { urlsForDownload, proxy, regularUpdate } = store;
+
+  return { urlsForDownload, proxy, regularUpdate };
+};
+const download = ({ urlsForDownload, proxy, regularUpdate }) => {
+  const { urls, isAdded } = urlsForDownload;
+  if (urls.length === 0) return;
+
+  const { proxyURL, crossorigin } = proxy;
+
+  const downloadPromises = urls.map(url => axios.get(crossorigin ? proxyURL + url : url));
+
+  Promise.all(downloadPromises)
+    .then((responses) => {
+      console.log(responses);
+      alertPublisher.deliver('ALERT_CLOSE');
+      feedPublisher.deliver('UPDATE_FEEDS', { responses, proxy });
+      if (isAdded) {
+        urlsPublisher.deliver('URL_ADDED');
+      }
+    })
+    .catch((error) => {
+      alertPublisher.deliver('ALERT_OPEN', error);
+      console.log(error); // eslint-disable-line
+    })
+    .then(() => {
+      if (regularUpdate.isEnabled) {
+        urlsPublisher.deliver('URLS_UPDATED');
+        const update = () => {
+          urlsPublisher.deliver('UPDATE_URLS');
+        };
+        setTimeout(update, regularUpdate.delay);
+      }
+    });
+};
+
+
 export default {
   inputComponent: { handler: renderInput, getData: getDataInput },
   alertComponent: { handler: renderAlert, getData: getDataAlert },
   feedComponent: { handler: renderFeed, getData: getDataFeed },
   modalComponent: { handler: renderModal, getData: getDataModal },
+  downloadComponent: { handler: download, getData: getDataDownload },
 };

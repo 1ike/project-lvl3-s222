@@ -3,3 +3,7 @@ node_js:
   - stable
 
 script: make lint test
+
+after_success:
+  - make build
+  - surge --project ./dist --domain rss-reader.surge.sh

@@ -1,6 +1,5 @@
 import $ from 'jquery';
 import validator from 'validator';
-import axios from 'axios';
 
 import store from './store';
 import publishers from './publishers';
@@ -9,6 +8,7 @@ import components from './components';
 
 const {
   inputPublisher,
+  urlsPublisher,
   alertPublisher,
   feedPublisher,
   modalPublisher,
@@ -18,13 +18,14 @@ const {
   alertComponent,
   feedComponent,
   modalComponent,
+  downloadComponent,
 } = components;
 
 inputPublisher.subscribe(inputComponent);
 alertPublisher.subscribe(alertComponent);
 feedPublisher.subscribe(feedComponent);
 modalPublisher.subscribe(modalComponent);
-
+urlsPublisher.subscribe(downloadComponent);
 
 const form = document.getElementById(store.formID);
 const input = document.getElementById(store.inputID);
@@ -45,35 +46,6 @@ const getInputState = () => {
 };
 
 
-const download = (urlInput) => {
-  const proxyURL = 'https://crossorigin.me/';
-  const crossorigin = true;
-  const corsProxy = { proxyURL, crossorigin };
-  const urls = urlInput ? [urlInput] : store.feeds.map(feed => feed.url);
-
-  const downloadPromises = urls.map(url => axios.get(crossorigin ? proxyURL + url : url));
-
-
-  Promise.all(downloadPromises)
-    .then((responses) => {
-      console.log(responses);
-      alertPublisher.deliver('ALERT_CLOSE');
-      feedPublisher.deliver('UPDATE_FEEDS', { responses, corsProxy });
-    })
-    .catch((error) => {
-      alertPublisher.deliver('ALERT_OPEN', error);
-      console.log(error); // eslint-disable-line
-    })
-    .then(() => {
-      setTimeout(download, 5000);
-    });
-};
-
-// const startUpdate = () => {
-//   download();
-// };
-
-
 const inputOnChange = () => {
   inputPublisher.deliver('INPUT_CHANGE', getInputState());
 };
@@ -92,11 +64,10 @@ input.addEventListener('keyup', () => {
 
 form.addEventListener('submit', (e) => {
   e.preventDefault();
-  download(store.input.value);
+  urlsPublisher.deliver('ADD_URL');
 });
 
 
 // init
-// setTimeout(startUpdate, 5000);
 input.focus();
 inputOnChange();

@@ -4,16 +4,6 @@ import Publisher from './Publisher';
 import store from './store';
 
 
-/* const uid = (() => {
-  let id = 0;
-  return () => {
-    const result = id === 0 ? 0 : id;
-    id += 1;
-    return result;
-  };
-})(); */
-
-
 /**
  *   inputPublisher
  */
@@ -31,6 +21,45 @@ const inputEmptyStorekeeper = () => {
 const inputPublisher = new Publisher({
   INPUT_CHANGE: inputStorekeeper,
   INPUT_EMPTY: inputEmptyStorekeeper,
+});
+
+
+/**
+ *   urlsPublisher
+ */
+const addURLStorekeeper = () => {
+  store.urlsForDownload = {
+    urls: [store.input.value],
+    isAdded: true,
+  };
+};
+
+const urlAddedStorekeeper = () => {
+  store.urlsForDownload = {
+    urls: [],
+    isAdded: false,
+  };
+};
+
+const updateURLsStorekeeper = () => {
+  store.urlsForDownload = {
+    urls: store.feeds.map(feed => feed.url),
+    isAdded: false,
+  };
+};
+
+const urlsUpdatedStorekeeper = () => {
+  store.urlsForDownload = {
+    urls: [],
+    isAdded: true,
+  };
+};
+
+const urlsPublisher = new Publisher({
+  ADD_URL: addURLStorekeeper,
+  UPDATE_URLS: updateURLsStorekeeper,
+  URL_ADDED: urlAddedStorekeeper,
+  URLS_UPDATED: urlsUpdatedStorekeeper,
 });
 
 
@@ -77,13 +106,13 @@ const getFeedData = (xmlDOM) => {
   };
 };
 
-const updateFeedsStorekeeper = ({ responses, corsProxy }) => {
+const updateFeedsStorekeeper = ({ responses }) => {
   responses.forEach(({ data, request }) => {
     const parser = new DOMParser();
     const xmlDOM = parser.parseFromString(data, 'application/xml');
     const parsedData = getFeedData(xmlDOM);
 
-    const { proxyURL, crossorigin } = corsProxy;
+    const { proxyURL, crossorigin } = store.proxy;
     const { responseURL } = request;
     const url = crossorigin ? responseURL.replace(proxyURL, '') : responseURL;
     const { feeds } = store;
@@ -123,24 +152,6 @@ const feedPublisher = new Publisher({
 
 
 /**
- *   urlsPublisher
- */
-const downloadFeedStorekeeper = () => {
-  store.urls = [store.input.value];
-};
-
-const updatedFeedsStorekeeper = () => {
-  const urls = store.feeds.map(feed => feed.url);
-  store.urls = urls;
-};
-
-const urlsPublisher = new Publisher({
-  DOWNLOAD_FEED: downloadFeedStorekeeper,
-  UPDATE_FEEDS: updatedFeedsStorekeeper,
-});
-
-
-/**
  *   modalPublisher
  */
 const modalOpenStorekeeper = (data) => {
@@ -162,8 +173,8 @@ const modalPublisher = new Publisher({
 
 export default {
   inputPublisher,
+  urlsPublisher,
   alertPublisher,
   feedPublisher,
   modalPublisher,
-  urlsPublisher,
 };

@@ -3,7 +3,10 @@ export default {
   inputID: 'urlInput',
   modalID: 'descriptionModal',
   feeds: [],
-  urls: [],
+  urlsForDownload: {
+    urls: [],
+    isAdded: true,
+  },
   input: {
     isValid: true,
     value: '',
@@ -12,6 +15,14 @@ export default {
   modal: {
     title: '',
     body: '',
+  },
+  proxy: {
+    proxyURL: 'https://crossorigin.me/',
+    crossorigin: false,
+  },
+  regularUpdate: {
+    delay: 5000,
+    isEnabled: true,
   },
 };
 
