@@ -175,7 +175,7 @@ const download = ({ urlsForDownload, proxy, regularUpdate }) => {
 
   Promise.all(downloadPromises)
     .then((responses) => {
-      console.log(responses);
+      console.log('Try to update feeds.');
       alertPublisher.deliver('ALERT_CLOSE');
       feedPublisher.deliver('UPDATE_FEEDS', { responses, proxy });
       if (isAdded) {
