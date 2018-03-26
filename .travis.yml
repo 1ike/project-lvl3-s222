@@ -3,8 +3,3 @@ node_js:
   - stable
 
 script: make lint test
-
-after_success:
-  - npm i surge
-  - make build
-  - surge --project ./dist --domain thin-activity.surge.sh
