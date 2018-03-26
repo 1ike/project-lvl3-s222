@@ -7,4 +7,4 @@ script: make lint test
 after_success:
   - npm install --save-dev surge
   - make build
-  - surge --project ./dist --domain http://thin-activity.surge.sh/
+  - surge --project ./dist --domain thin-activity.surge.sh
